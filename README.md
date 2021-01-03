@@ -14,7 +14,7 @@
 *  Docker Compose **1.27.4** or more recent
 
 ## Installation
->Firstly to send an e-mail, relevant environments must first be defined for the **.env** file or relevant prod/dev(dev mode runs project embedded. No external ActiveMQ needed) properties file. Otherwise project will give an error;
+>Firstly to send an e-mail, relevant environments must be defined for the **.env** file or relevant prod/dev(dev mode runs project embedded. No external ActiveMQ needed) properties file. Otherwise project will give an error;
 > * SMTP_HOST
 > * SMTP_USERNAME
 > * SMTP_PASSWORD
