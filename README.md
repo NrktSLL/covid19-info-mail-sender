@@ -1,4 +1,4 @@
-# Covid19 Info Mail Sender
+# Covid19 Daily Case Mail Sender
 
 <p align="center">
 <img src="https://github.com/NrktSLL/covid19-info-mail-sender/blob/master/images/covid19-info-mail-sender.png" alt="Covid19 Info Mail Sender" width="75%" height="75%"/> 
