@@ -8,6 +8,12 @@
 
 >I used [this](https://disease.sh/) API to get daily case information
 
+## How Is It Work?
+
+<p align="center">
+<img src="https://github.com/NrktSLL/covid19-info-mail-sender/blob/master/images/How%20is%20it%20Work.png" alt="Covid19 Info Mail Sender" width="70%" height="70%"/> 
+</p>
+
 ## Prerequisites
 
 *  Docker **20.10.0** or more recent
