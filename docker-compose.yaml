@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+
+  covid19:
+    build: .
+    container_name: covid19_mail_sender
+    depends_on:
+      - artemis
+    environment:
+      - ACTIVE_PROFILE
+      - ARTEMIS_HOST
+      - ARTEMIS_PORT
+      - ARTEMIS_USERNAME
+      - ARTEMIS_PASSWORD
+      - QUEUE_NAME
+      - SMTP_HOST
+      - SMTP_PORT
+      - SMTP_USERNAME
+      - SMTP_PASSWORD
+      - SMTP_AUTH=true
+      - SMTP_STARTTLS_ENABLE
+      - SMTP_STARTTLS_REQUIRED
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+
+  artemis:
+    image: vromero/activemq-artemis
+    container_name: artemis
+    environment:
+      - ARTEMIS_USERNAME
+      - ARTEMIS_PASSWORD
+    ports:
+      - 8161:8161
+      - 61616:61616
+    volumes:
+      - ./data/artemis-data:/var/lib/artemis/data:Z

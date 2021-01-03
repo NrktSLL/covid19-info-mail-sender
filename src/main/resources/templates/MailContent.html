@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head title="Mail Content">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        table.mailTemplate {
+            font-family: Verdana, Geneva, sans-serif;
+            background-color: #20A46F;
+            width: 400px;
+            text-align: center;
+            border-collapse: collapse;
+        }
+
+        table.mailTemplate td, table.mailTemplate th {
+            border: 1px solid #555555;
+            padding: 5px 10px;
+        }
+
+        table.mailTemplate tbody td {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        table.mailTemplate td:nth-child(even) {
+            background: #555555;
+        }
+
+        table.mailTemplate tfoot td {
+            font-size: 13px;
+        }
+
+        table.mailTemplate tfoot .links a {
+            display: inline-block;
+            background: #FFFFFF;
+            color: #398AA4;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
+
+    </style>
+    <title></title>
+</head>
+<body>
+<table class="mailTemplate">
+    <tbody>
+    <tr>
+        <th colspan="4"> Your Daily Case Information</th>
+    </tr>
+    <tr>
+        <td>TodayCase</td>
+        <td th:text="${TodayCase}"></td>
+        <td>TotalCase</td>
+        <td th:text="${TotalCase}"></td>
+    </tr>
+    <tr>
+        <td>TodayDeaths</td>
+        <td th:text="${TodayDeaths}"></td>
+        <td>TotalDeaths</td>
+        <td th:text="${TotalDeaths}"></td>
+    </tr>
+    <tr>
+        <td>ActiveCase</td>
+        <td th:text="${ActiveCase}"></td>
+        <td>TotalRecovered</td>
+        <td th:text="${TotalRecovered}"></td>
+    </tr>
+    <tr>
+        <td>CriticalCase</td>
+        <td th:text="${CriticalCase}"></td>
+        <td>Tests</td>
+        <td th:text="${Tests}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
