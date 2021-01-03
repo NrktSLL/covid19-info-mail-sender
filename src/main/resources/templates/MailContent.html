@@ -42,33 +42,35 @@
     <title></title>
 </head>
 <body>
+<div th:text="${Person}"></div>
+<br>
 <table class="mailTemplate">
     <tbody>
     <tr>
         <th colspan="4"> Your Daily Case Information</th>
     </tr>
     <tr>
-        <td>TodayCase</td>
+        <td>Today Case:</td>
         <td th:text="${TodayCase}"></td>
-        <td>TotalCase</td>
+        <td>Total Case:</td>
         <td th:text="${TotalCase}"></td>
     </tr>
     <tr>
-        <td>TodayDeaths</td>
+        <td>Today Deaths:</td>
         <td th:text="${TodayDeaths}"></td>
-        <td>TotalDeaths</td>
+        <td>Total Deaths:</td>
         <td th:text="${TotalDeaths}"></td>
     </tr>
     <tr>
-        <td>ActiveCase</td>
+        <td>Active Case:</td>
         <td th:text="${ActiveCase}"></td>
-        <td>TotalRecovered</td>
+        <td>Total Recovered:</td>
         <td th:text="${TotalRecovered}"></td>
     </tr>
     <tr>
-        <td>CriticalCase</td>
+        <td>Critical Case:</td>
         <td th:text="${CriticalCase}"></td>
-        <td>Tests</td>
+        <td>Tests:</td>
         <td th:text="${Tests}"></td>
     </tr>
     </tbody>

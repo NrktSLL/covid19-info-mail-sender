@@ -6,6 +6,7 @@ import com.nrkt.covid19infomailsender.utils.Covid19DailyCase;
 import com.nrkt.covid19infomailsender.utils.MailContentBuilder;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,8 +14,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -26,11 +25,12 @@ public class CovidCaseMailServiceImpl implements CovidCaseMailService {
     JavaMailSender mailSender;
     TemplateEngine templateEngine;
 
+    @SneakyThrows
     @Override
     public void sendMail(Person person) {
         var caseInfo = Covid19DailyCase.info(person.getCountry());
 
-        if(caseInfo==null) throw new NullPointerException("Case Information empty");
+        if (caseInfo == null) throw new NullPointerException("Case Information empty");
 
         var mailContent = MailContent.builder()
                 .active(caseInfo.getActive())
@@ -43,24 +43,20 @@ public class CovidCaseMailServiceImpl implements CovidCaseMailService {
                 .todayDeaths(caseInfo.getTodayDeaths())
                 .build();
 
-        var mailContentBuilder = MailContentBuilder.generateMailContent(mailContent, templateEngine);
+        var mailContentBuilder = MailContentBuilder
+                .generateMailContent(person.getName(), person.getCountry().toString(), mailContent, templateEngine);
 
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
-                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                    StandardCharsets.UTF_8.name());
+        var mimeMessage = mailSender.createMimeMessage();
+        var mailHelper = new MimeMessageHelper(mimeMessage,
+                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                StandardCharsets.UTF_8.name());
 
-            helper.setTo(person.getEmail());
-            helper.setSubject("Daily Case");
+        mailHelper.setTo(person.getEmail());
+        mailHelper.setSubject("Daily Case");
+        mailHelper.setText(mailContentBuilder, true);
 
-            mimeMessage.setContent(mailContentBuilder, "text/html");
-            mailSender.send(mimeMessage);
+        mailSender.send(mimeMessage);
 
-            log.info("Mail Sent: " + person.getEmail());
-
-        } catch (MessagingException ex) {
-            log.error(ex.getMessage());
-        }
+        log.info("Mail Sent: " + person.getEmail());
     }
 }
