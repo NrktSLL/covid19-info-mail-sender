@@ -1,7 +1,7 @@
 package com.nrkt.covid19infomailsender.service.contract;
 
 import com.nrkt.covid19infomailsender.exception.CustomNotFoundException;
-import com.nrkt.covid19infomailsender.models.PersonDto;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
 import com.nrkt.covid19infomailsender.domain.Person;
 import com.nrkt.covid19infomailsender.repository.ContactRepository;
 import lombok.AccessLevel;
@@ -17,20 +17,25 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Transactional
 public class ContactServiceImpl implements ContactService {
 
     ContactRepository contactRepository;
 
     @Override
-    @Transactional
-    public void subscribe(PersonDto person) {
+    public PersonDto subscribe(PersonDto person) {
         var personInfo = Person.builder()
                 .name(person.getName())
                 .email(person.getEmail())
                 .country(person.getCountry())
                 .build();
 
-        contactRepository.save(personInfo);
+        personInfo = contactRepository.save(personInfo);
+
+        return PersonDto.builder().name(personInfo.getName())
+                .country(personInfo.getCountry())
+                .email(personInfo.getEmail())
+                .build();
     }
 
     @Override

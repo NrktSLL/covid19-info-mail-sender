@@ -1,6 +1,6 @@
 package com.nrkt.covid19infomailsender.utils;
 
-import com.nrkt.covid19infomailsender.models.MailContent;
+import com.nrkt.covid19infomailsender.dto.MailContent;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.UtilityClass;

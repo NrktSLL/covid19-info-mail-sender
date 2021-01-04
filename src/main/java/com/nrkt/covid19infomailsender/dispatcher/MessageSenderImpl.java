@@ -2,7 +2,7 @@ package com.nrkt.covid19infomailsender.dispatcher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nrkt.covid19infomailsender.models.PersonDto;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 @RequiredArgsConstructor
@@ -29,17 +33,21 @@ public class MessageSenderImpl implements MessageSender {
     String queueName;
 
     @Override
-    public Boolean publish(PersonDto personDto) {
-        jmsTemplate.sendAndReceive(queueName, session -> {
-            Message message;
-            try {
-                message = session.createTextMessage(objectMapper.writeValueAsString(personDto));
-                message.setStringProperty("_type", "com.nrkt.covid19infomailsender.models.PersonDto");
-            } catch (JsonProcessingException ex) {
-                throw new JMSException(ex.getMessage());
-            }
-            return message;
-        });
-        return true;
+
+    public void publish(List<PersonDto> personDtoList) {
+        ExecutorService executor = Executors.newFixedThreadPool(personDtoList.size());
+        for (PersonDto person : personDtoList) {
+            executor.execute(() -> jmsTemplate.send(queueName, session -> {
+                Message message;
+                try {
+                    message = session.createTextMessage(objectMapper.writeValueAsString(person));
+                    message.setStringProperty("_type", "com.nrkt.covid19infomailsender.dto.PersonDto");
+
+                } catch (JsonProcessingException ex) {
+                    throw new JMSException(ex.getMessage());
+                }
+                return Objects.requireNonNull(message);
+            }));
+        }
     }
 }

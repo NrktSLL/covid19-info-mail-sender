@@ -1,4 +1,4 @@
-package com.nrkt.covid19infomailsender.models;
+package com.nrkt.covid19infomailsender.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

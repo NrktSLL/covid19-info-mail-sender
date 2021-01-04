@@ -1,4 +1,4 @@
-package com.nrkt.covid19infomailsender.models;
+package com.nrkt.covid19infomailsender.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;

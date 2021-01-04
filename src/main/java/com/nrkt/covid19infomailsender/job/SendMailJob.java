@@ -1,15 +1,18 @@
 package com.nrkt.covid19infomailsender.job;
 
+import com.nrkt.covid19infomailsender.dispatcher.MessageSender;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
 import com.nrkt.covid19infomailsender.service.contract.ContactService;
-import com.nrkt.covid19infomailsender.service.mail.CovidCaseMailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -17,21 +20,25 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SendMailJob extends QuartzJobBean {
 
-    CovidCaseMailService mailService;
     ContactService contactService;
+    MessageSender messageSender;
 
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    protected void executeInternal(JobExecutionContext context) {
         log.info("SendMailJob Running");
-        try {
-            var contactAllPerson = contactService.getAllPerson();
-            if (contactAllPerson.isEmpty()) {
-                log.warn("No contact!");
-                return;
-            }
-            contactAllPerson.forEach(mailService::sendMail);
-        } catch (Exception ex) {
-            log.error(ex.getMessage() + " Control your properties");
+
+        var contactAllPerson = contactService.getAllPerson();
+        if (contactAllPerson.isEmpty()) {
+            log.warn("No contact!");
+            return;
         }
+
+        List<PersonDto> personDtoList = contactAllPerson.stream().map(person -> PersonDto.builder()
+                .country(person.getCountry())
+                .email(person.getEmail())
+                .name(person.getName())
+                .build()).collect(Collectors.toList());
+
+        messageSender.publish(personDtoList);
     }
 }

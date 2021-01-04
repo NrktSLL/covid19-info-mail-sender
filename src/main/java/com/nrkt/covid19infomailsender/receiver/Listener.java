@@ -1,7 +1,7 @@
 package com.nrkt.covid19infomailsender.receiver;
 
-import com.nrkt.covid19infomailsender.models.PersonDto;
-import com.nrkt.covid19infomailsender.service.contract.ContactService;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
+import com.nrkt.covid19infomailsender.service.mail.CovidCaseMailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Listener {
 
-    ContactService contactService;
+    CovidCaseMailService mailService;
 
     @JmsListener(destination = "${queue.name}")
     public void consume(PersonDto person) {
-        contactService.subscribe(person);
+       mailService.sendMail(person);
     }
 }

@@ -43,7 +43,6 @@ docker-compose up -d
 * Artemis Jms Server *(to run in embedded mode)*
 * Lombok
 * Dev Tools
-* okhttp
 * Configuration Processor
 * Swagger (Springfox)
 

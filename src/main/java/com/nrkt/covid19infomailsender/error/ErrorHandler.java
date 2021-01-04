@@ -1,13 +1,12 @@
 package com.nrkt.covid19infomailsender.error;
 
 import com.nrkt.covid19infomailsender.exception.CustomNotFoundException;
-import com.sun.mail.util.MailConnectException;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.listener.adapter.ListenerExecutionFailedException;
-import org.springframework.mail.MailException;
+import org.springframework.jms.support.converter.MessageConversionException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,6 +14,7 @@ import javax.jms.JMSException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.UnexpectedTypeException;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -42,13 +42,13 @@ public class ErrorHandler {
 
     @ExceptionHandler(ClassNotFoundException.class)
     ResponseEntity<ApiError> classNotFoundException(Exception ex, HttpServletRequest request) {
-        return new ResponseEntity<>(errorDetails(ex.getMessage() +"not found", INTERNAL_SERVER_ERROR, request), INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetails(ex.getMessage() + "not found", INTERNAL_SERVER_ERROR, request), INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({
             ListenerExecutionFailedException.class,
             JMSException.class,
-            MailConnectException.class
+            MessageConversionException.class
     })
     ResponseEntity<ApiError> handleJmsListenerException(Exception ex, HttpServletRequest request) {
         return new ResponseEntity<>(errorDetails(ex.getMessage(), INTERNAL_SERVER_ERROR, request), INTERNAL_SERVER_ERROR);
@@ -57,7 +57,8 @@ public class ErrorHandler {
     @ExceptionHandler({
             Exception.class,
             NullPointerException.class,
-            JobExecutionException.class
+            JobExecutionException.class,
+            UnknownHostException.class
     })
     ResponseEntity<ApiError> handleException(Exception ex, HttpServletRequest request) {
         return new ResponseEntity<>(errorDetails(ex.getMessage(), INTERNAL_SERVER_ERROR, request), INTERNAL_SERVER_ERROR);

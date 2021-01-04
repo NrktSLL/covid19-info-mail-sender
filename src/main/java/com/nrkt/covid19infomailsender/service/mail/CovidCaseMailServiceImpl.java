@@ -1,7 +1,7 @@
 package com.nrkt.covid19infomailsender.service.mail;
 
-import com.nrkt.covid19infomailsender.domain.Person;
-import com.nrkt.covid19infomailsender.models.MailContent;
+import com.nrkt.covid19infomailsender.dto.MailContent;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
 import com.nrkt.covid19infomailsender.utils.Covid19DailyCase;
 import com.nrkt.covid19infomailsender.utils.MailContentBuilder;
 import lombok.AccessLevel;
@@ -27,7 +27,7 @@ public class CovidCaseMailServiceImpl implements CovidCaseMailService {
 
     @SneakyThrows
     @Override
-    public void sendMail(Person person) {
+    public void sendMail(PersonDto person) {
         var caseInfo = Covid19DailyCase.info(person.getCountry());
 
         if (caseInfo == null) throw new NullPointerException("Case Information empty");

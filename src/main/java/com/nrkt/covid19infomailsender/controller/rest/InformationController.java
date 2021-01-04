@@ -1,12 +1,10 @@
 package com.nrkt.covid19infomailsender.controller.rest;
 
-import com.nrkt.covid19infomailsender.models.PersonDto;
+import com.nrkt.covid19infomailsender.error.ApiError;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
 import com.nrkt.covid19infomailsender.enums.CountryEnum;
 import com.nrkt.covid19infomailsender.service.contract.ContactService;
-import com.nrkt.covid19infomailsender.service.information.InformationService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,27 +17,31 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@RequestMapping(value = "/v1/information")
+@RequestMapping(value = "/v1/information", produces = "application/json", consumes = "application/json")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Api(tags = "Contact")
 @Transactional
 public class InformationController {
 
-    InformationService informationService;
     ContactService contactService;
 
     @SneakyThrows
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Add Information")
-    public String contactInformation(
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok!"),
+            @ApiResponse(code = 500, message = "Internal Server Error!", response = ApiError.class)
+    })
+    public PersonDto contactInformation(
             @ApiParam(name = "Person", value = "Contact Information", required = true)
             @NotNull @RequestBody @Valid PersonDto person,
             @NotNull @ApiParam(value = "Country", required = true)
             @RequestParam CountryEnum country) {
 
-        return informationService.sender(person, country).equals(true) ? "subscribed successfully" : "subscribed failed";
+        person.setCountry(country);
+        return contactService.subscribe(person);
     }
 
     @DeleteMapping

@@ -1,7 +1,9 @@
 package com.nrkt.covid19infomailsender.dispatcher;
 
-import com.nrkt.covid19infomailsender.models.PersonDto;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
+
+import java.util.List;
 
 public interface MessageSender {
-    Boolean publish(PersonDto person);
+    void publish(List<PersonDto> person);
 }

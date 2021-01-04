@@ -1,12 +1,12 @@
 package com.nrkt.covid19infomailsender.service.contract;
 
 import com.nrkt.covid19infomailsender.domain.Person;
-import com.nrkt.covid19infomailsender.models.PersonDto;
+import com.nrkt.covid19infomailsender.dto.PersonDto;
 
 import java.util.List;
 
 public interface ContactService {
-    void subscribe(PersonDto person);
+    PersonDto subscribe(PersonDto person);
 
     void unsubscribe(String email);
 
